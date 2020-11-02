@@ -1,0 +1,130 @@
+{% extends 'navbar.html' %}
+
+{% set active_page = 'management' %}
+
+{% block content %}
+
+<div style="height: 10px;">
+</div>
+
+<div class="container">
+    <div style="height: 30px;font-size:16px;">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div style="color: #c62928;max-width: 300px;line-height: 1;text-align: left">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Options</a>
+                <a href="#" class="list-group-item list-group-item-action active"
+                   style=""
+                >
+                    Manage Access
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">&nbsp</a>
+                <a href="#" class="list-group-item list-group-item-action">&nbsp</a>
+                <a href="#" class="list-group-item list-group-item-action">&nbsp</a>
+                <a href="#" class="list-group-item list-group-item-action">&nbsp</a>
+                <a href="#" class="list-group-item list-group-item-action">&nbsp</a>
+                <a href="#" class="list-group-item list-group-item-action">&nbsp</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="row">
+                <div class="col-9">
+                    <h2>Manage Access</h2>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Add an user
+                    </button>
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead style="background-color: #eef7ff;">
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    {% if user.role == 1 %}
+                    <td>admin</td>
+                    {% endif %}
+                    {% if user.role == 0 %}
+                    <td>user</td>
+                    {% endif %}
+                    {% if user.role == 1 %}
+                    <td>&nbsp</td>
+                    {% endif %}
+                    {% if user.role == 0 %}
+                    <td>
+                        <a class="btn btn-outline-danger"
+                           href="{{ url_for('admin.delete_user', name=user.username)}}"><i
+                                class="far fa-eye">Delete</i></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Sign up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{{ url_for('admin.add_user')}}" method="POST">
+                <div class="modal-body">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="inputUsername">Username</label>
+                        {{ form.username(class_="form-control",id="inputUsername") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="InputEmail">Email address</label>
+                        {{ form.email(class_="form-control",id="InputEmail") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="InputPassword1">Password</label>
+                        {{ form.password(class_="form-control",id="InputPassword1") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="InputPassword2">Confirm password</label>
+                        {{ form.confirm(class_="form-control",id="InputPassword2") }}
+                    </div>
+                    <div class="form-group form-check">
+                        {{ form.role(class_="form-check-input",id="Check1") }}
+                        <label class="form-check-label" for="Check1">Administrator permissions</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    {{ form.submit(class_="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
